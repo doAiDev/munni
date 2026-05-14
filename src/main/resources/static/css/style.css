@@ -4,10 +4,10 @@
 :root {
     --primary: #c9a96e;
     --primary-dark: #a8845a;
-    --bg: #fdfaf7;
+    --bg: #ffffff;
     --text: #3a3a3a;
-    --light: #f5ede4;
-    --border: #e8d5c4;
+    --light: #f5f5f5;
+    --border: #e8e8e8;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,7 +36,7 @@ nav.navbar {
 
 /* HERO */
 .hero {
-    background: linear-gradient(135deg, #fdf6ee 0%, #f0e0cc 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
     padding: 80px 0;
     text-align: center;
 }
@@ -143,11 +143,12 @@ nav.navbar {
 
 /* FOOTER */
 footer {
-    background: #2d2d2d;
+    background: #ffffff;
     color: #aaa;
     text-align: center;
     padding: 24px;
     font-size: 0.85rem;
+    border-top: 1px solid var(--border);
 }
 
 /* ADMIN */
