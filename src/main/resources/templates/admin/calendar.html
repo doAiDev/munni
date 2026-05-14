@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>캘린더 - Munni Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .fc-event { cursor: pointer; }
+        .filter-radio label { cursor: pointer; padding: 7px 18px; border-radius: 20px; border: 1.5px solid #e8d5c4; font-size: 0.85rem; margin-right: 6px; transition: all 0.2s; }
+        .filter-radio input[type=radio] { display: none; }
+        .filter-radio input[type=radio]:checked + label { background: #c9a96e; color: #fff; border-color: #c9a96e; }
+        .badge-admin { background: #c9a96e; }
+        .badge-admin2 { background: #7eb8c9; }
+        #calendar { max-width: 100%; }
+    </style>
+</head>
+<body style="background:#f8f4f0;">
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">✦ MUNNI</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <a href="/admin/dashboard" class="nav-link"><i class="bi bi-arrow-left"></i> 대시보드</a>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-outline-secondary">로그아웃</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="admin-container" style="max-width:1100px;">
+    <div class="admin-card">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <h2><i class="bi bi-calendar3 me-2"></i>캘린더</h2>
+
+            <!-- 필터 라디오 버튼 -->
+            <div class="filter-radio d-flex align-items-center flex-wrap gap-1">
+                <input type="radio" name="filter" id="f-all" value="all" checked>
+                <label for="f-all">전체보기</label>
+
+                <input type="radio" name="filter" id="f-admin" value="admin">
+                <label for="f-admin"><span class="badge badge-admin me-1">admin</span></label>
+
+                <input type="radio" name="filter" id="f-admin2" value="admin2">
+                <label for="f-admin2"><span class="badge bg-info me-1">admin2</span></label>
+
+                <button class="btn btn-sm btn-gold ms-2" data-bs-toggle="modal" data-bs-target="#addModal">
+                    <i class="bi bi-plus-lg"></i> 일정 추가
+                </button>
+            </div>
+        </div>
+
+        <!-- 범례 -->
+        <div class="mb-3 d-flex gap-3" style="font-size:0.82rem;">
+            <span><span style="display:inline-block;width:12px;height:12px;background:#c9a96e;border-radius:3px;margin-right:4px;"></span>admin</span>
+            <span><span style="display:inline-block;width:12px;height:12px;background:#7eb8c9;border-radius:3px;margin-right:4px;"></span>admin2</span>
+        </div>
+
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<!-- 일정 추가 모달 -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">일정 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">날짜 <span class="text-danger">*</span></label>
+                    <input type="date" id="inputDate" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">제목 <span class="text-danger">*</span></label>
+                    <input type="text" id="inputTitle" class="form-control" placeholder="일정 제목">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">메모</label>
+                    <textarea id="inputDesc" class="form-control" rows="3" placeholder="추가 메모"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-gold" onclick="saveEvent()">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 일정 상세 모달 -->
+<div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="detailTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-1" style="font-size:0.85rem;"><i class="bi bi-calendar3 me-1"></i><span id="detailDate"></span></p>
+                <p class="text-muted mb-2" style="font-size:0.85rem;"><i class="bi bi-person me-1"></i><span id="detailUser"></span></p>
+                <p id="detailDesc" style="font-size:0.9rem;"></p>
+            </div>
+            <div class="modal-footer border-0" id="detailFooter"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script th:inline="javascript">
+    const currentUser = [[${currentUser}]];
+    let calendar;
+
+    const colorMap = { admin: '#c9a96e', admin2: '#7eb8c9' };
+
+    function loadEvents(filter) {
+        fetch('/admin/calendar/events?filter=' + filter)
+            .then(r => r.json())
+            .then(data => {
+                const events = data.map(e => ({
+                    id: e.id,
+                    title: e.title,
+                    start: e.eventDate,
+                    backgroundColor: colorMap[e.createdBy] || '#aaa',
+                    borderColor: colorMap[e.createdBy] || '#aaa',
+                    extendedProps: { description: e.description, createdBy: e.createdBy }
+                }));
+                calendar.removeAllEvents();
+                calendar.addEventSource(events);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('calendar');
+        calendar = new FullCalendar.Calendar(el, {
+            initialView: 'dayGridMonth',
+            locale: 'ko',
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,listMonth' },
+            height: 'auto',
+            eventClick: function(info) {
+                const e = info.event;
+                document.getElementById('detailTitle').textContent = e.title;
+                document.getElementById('detailDate').textContent = e.startStr;
+                document.getElementById('detailUser').textContent = e.extendedProps.createdBy;
+                document.getElementById('detailDesc').textContent = e.extendedProps.description || '-';
+                const footer = document.getElementById('detailFooter');
+                footer.innerHTML = '';
+                if (e.extendedProps.createdBy === currentUser) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn btn-sm btn-outline-danger';
+                    btn.innerHTML = '<i class="bi bi-trash"></i> 삭제';
+                    btn.onclick = () => deleteEvent(e.id);
+                    footer.appendChild(btn);
+                }
+                new bootstrap.Modal(document.getElementById('detailModal')).show();
+            },
+            dateClick: function(info) {
+                document.getElementById('inputDate').value = info.dateStr;
+                new bootstrap.Modal(document.getElementById('addModal')).show();
+            }
+        });
+        calendar.render();
+        loadEvents('all');
+
+        document.querySelectorAll('input[name=filter]').forEach(r => {
+            r.addEventListener('change', () => loadEvents(r.value));
+        });
+    });
+
+    function saveEvent() {
+        const title = document.getElementById('inputTitle').value.trim();
+        const date = document.getElementById('inputDate').value;
+        const desc = document.getElementById('inputDesc').value.trim();
+        if (!title || !date) { alert('날짜와 제목을 입력하세요.'); return; }
+
+        fetch('/admin/calendar/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': getCookie('XSRF-TOKEN') },
+            body: JSON.stringify({ title, eventDate: date, description: desc })
+        }).then(() => {
+            bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
+            document.getElementById('inputTitle').value = '';
+            document.getElementById('inputDesc').value = '';
+            const filter = document.querySelector('input[name=filter]:checked').value;
+            loadEvents(filter);
+        });
+    }
+
+    function deleteEvent(id) {
+        if (!confirm('삭제하시겠습니까?')) return;
+        fetch('/admin/calendar/events/' + id, {
+            method: 'DELETE',
+            headers: { 'X-XSRF-TOKEN': getCookie('XSRF-TOKEN') }
+        }).then(() => {
+            bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();
+            const filter = document.querySelector('input[name=filter]:checked').value;
+            loadEvents(filter);
+        });
+    }
+
+    function getCookie(name) {
+        const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return v ? v[2] : '';
+    }
+</script>
+</body>
+</html>

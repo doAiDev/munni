@@ -18,6 +18,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/admin/calendar/events/**")
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
@@ -43,7 +46,12 @@ public class SecurityConfig {
             .password(encoder.encode("1234321"))
             .roles("ADMIN")
             .build();
-        return new InMemoryUserDetailsManager(admin);
+        var admin2 = User.builder()
+            .username("admin2")
+            .password(encoder.encode("1234321"))
+            .roles("ADMIN")
+            .build();
+        return new InMemoryUserDetailsManager(admin, admin2);
     }
 
     @Bean
