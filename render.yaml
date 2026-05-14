@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: munni
+    runtime: docker
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8080
+    disk:
+      name: munni-uploads
+      mountPath: /app/uploads
+      sizeGB: 1

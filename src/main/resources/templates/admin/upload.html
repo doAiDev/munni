@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>상품 등록 - Munni</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .preview-box {
+            width: 100%; height: 240px;
+            border: 2px dashed #e8d5c4;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; overflow: hidden; background: #fdf6ee;
+            transition: border-color 0.2s;
+        }
+        .preview-box:hover { border-color: #c9a96e; }
+        .preview-box img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body style="background:#f8f4f0;">
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">✦ MUNNI</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <a href="/admin/dashboard" class="nav-link"><i class="bi bi-arrow-left"></i> 대시보드</a>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-outline-secondary">로그아웃</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="admin-container">
+    <div class="admin-card">
+        <h2><i class="bi bi-plus-circle me-2"></i>상품 등록</h2>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/admin/upload}" method="post" enctype="multipart/form-data">
+            <div class="row g-4">
+                <!-- 이미지 업로드 -->
+                <div class="col-md-5">
+                    <label class="form-label fw-500">상품 이미지</label>
+                    <div class="preview-box" onclick="document.getElementById('imageFile').click()">
+                        <img id="previewImg" src="" alt="" style="display:none;">
+                        <div id="previewPlaceholder" class="text-center text-muted">
+                            <i class="bi bi-cloud-upload" style="font-size:2.5rem; color:#c9a96e;"></i>
+                            <p class="mt-2 mb-0" style="font-size:0.85rem;">클릭하여 이미지 선택</p>
+                            <p style="font-size:0.78rem; color:#bbb;">JPG, PNG, WEBP (최대 10MB)</p>
+                        </div>
+                    </div>
+                    <input type="file" id="imageFile" name="imageFile" accept="image/*"
+                           class="d-none" onchange="previewImage(this)">
+                </div>
+
+                <!-- 상품 정보 -->
+                <div class="col-md-7">
+                    <div class="mb-3">
+                        <label class="form-label">카테고리 <span class="text-danger">*</span></label>
+                        <select name="category" class="form-select" required>
+                            <option value="">선택하세요</option>
+                            <option th:each="cat : ${categories}"
+                                    th:value="${cat.name()}"
+                                    th:text="${cat.label}">카테고리</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">상품명 <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="예) 골드 레이어드 목걸이" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">가격</label>
+                        <input type="text" name="price" class="form-control" placeholder="예) 28,000원">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">설명</label>
+                        <textarea name="description" class="form-control" rows="4"
+                                  placeholder="상품에 대한 간단한 설명을 입력하세요"></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-gold">등록하기</button>
+                        <a href="/admin/dashboard" class="btn btn-outline-secondary">취소</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function previewImage(input) {
+        const img = document.getElementById('previewImg');
+        const placeholder = document.getElementById('previewPlaceholder');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                img.src = e.target.result;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+</body>
+</html>

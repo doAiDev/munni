@@ -1,0 +1,167 @@
+/* Munni Accessory Shop - Custom Styles */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+
+:root {
+    --primary: #c9a96e;
+    --primary-dark: #a8845a;
+    --bg: #fdfaf7;
+    --text: #3a3a3a;
+    --light: #f5ede4;
+    --border: #e8d5c4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* NAV */
+nav.navbar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+}
+.navbar-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--primary) !important;
+    letter-spacing: 2px;
+}
+.nav-link { color: var(--text) !important; font-weight: 400; font-size: 0.9rem; letter-spacing: 1px; }
+.nav-link:hover { color: var(--primary) !important; }
+
+/* HERO */
+.hero {
+    background: linear-gradient(135deg, #fdf6ee 0%, #f0e0cc 100%);
+    padding: 80px 0;
+    text-align: center;
+}
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+.hero p { font-size: 1.1rem; color: #777; max-width: 500px; margin: 0 auto 2rem; }
+.btn-primary-custom {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 12px 36px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+.btn-primary-custom:hover { background: var(--primary-dark); color: #fff; }
+
+/* CATEGORY TABS */
+.category-tabs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 2rem 0; }
+.category-tab {
+    padding: 8px 22px;
+    border-radius: 25px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.category-tab:hover, .category-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+/* PRODUCT GRID */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; padding: 1rem 0 3rem; }
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); }
+.product-card img {
+    width: 100%; height: 280px;
+    object-fit: cover;
+    display: block;
+}
+.product-card .no-img {
+    width: 100%; height: 280px;
+    background: var(--light);
+    display: flex; align-items: center; justify-content: center;
+    color: #bbb; font-size: 3rem;
+}
+.product-card .card-body { padding: 16px; }
+.product-card .category-badge {
+    display: inline-block;
+    background: var(--light);
+    color: var(--primary-dark);
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+.product-card h5 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+.product-card .price { color: var(--primary-dark); font-weight: 600; font-size: 1rem; }
+.product-card .desc { color: #999; font-size: 0.82rem; margin-top: 4px; }
+
+/* CONTACT SECTION */
+.contact-section {
+    background: var(--light);
+    padding: 60px 0;
+    text-align: center;
+}
+.contact-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+}
+.social-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.social-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: #fff;
+    border-radius: 25px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+}
+.social-link:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.social-link img { width: 20px; height: 20px; }
+
+/* FOOTER */
+footer {
+    background: #2d2d2d;
+    color: #aaa;
+    text-align: center;
+    padding: 24px;
+    font-size: 0.85rem;
+}
+
+/* ADMIN */
+.admin-container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+.admin-card { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); }
+.admin-card h2 { font-family: 'Playfair Display', serif; color: var(--primary-dark); margin-bottom: 24px; }
+
+/* LOGIN */
+.login-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--light); }
+.login-box { background: #fff; border-radius: 16px; padding: 48px 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
+.login-box h2 { font-family: 'Playfair Display', serif; color: var(--primary-dark); text-align: center; margin-bottom: 2rem; }
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.2rem rgba(201,169,110,0.25); }
+.btn-gold { background: var(--primary); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; }
+.btn-gold:hover { background: var(--primary-dark); color: #fff; }
+
+/* ALERT */
+.alert-success { background: #f0faf0; border-color: #b8e0b8; color: #2d7a2d; }
